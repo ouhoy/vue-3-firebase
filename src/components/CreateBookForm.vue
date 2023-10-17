@@ -1,12 +1,27 @@
 <script setup lang="ts">
 import {ref} from "vue";
+import {addDoc, collection} from "firebase/firestore";
+import {db} from "@/firebase/config";
 
 
 const title = ref('')
 const author = ref('')
 
+
+
 const handleSubmit = async () => {
-  console.log(title.value, author.value)
+  const collectionRef = collection(db, "books");
+
+  await addDoc(collectionRef, {
+    title: title.value,
+    author: author.value,
+    isFav: false,
+
+  })
+
+  title.value = "";
+  author.value = "";
+
 }
 </script>
 
