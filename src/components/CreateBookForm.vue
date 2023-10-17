@@ -1,16 +1,23 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {addDoc, collection} from "firebase/firestore";
+import {addDoc,  collection} from "firebase/firestore";
 import {db} from "@/firebase/config";
 
 
+type Book = {
+  title: string,
+  author: string,
+  isFav: boolean,
+  id: string
+}
+
 const title = ref('')
 const author = ref('')
+const collectionRef = collection(db, "books");
 
 
 
 const handleSubmit = async () => {
-  const collectionRef = collection(db, "books");
 
   await addDoc(collectionRef, {
     title: title.value,
@@ -23,6 +30,8 @@ const handleSubmit = async () => {
   author.value = "";
 
 }
+
+
 </script>
 
 <template>

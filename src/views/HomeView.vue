@@ -2,6 +2,8 @@
 
 import CreateBookForm from "@/components/CreateBookForm.vue";
 import getCollections from "@/firebase/getCollections";
+import {db} from "@/firebase/config";
+import {doc, deleteDoc} from "firebase/firestore";
 
 
 type Book = {
@@ -13,21 +15,36 @@ type Book = {
 const {documents: books} = getCollections<Book>("books");
 
 
+async function handleDelete(book: Book) {
+  const docRef = doc(db, "books", book.id);
+
+  await deleteDoc(docRef)
+
+}
 </script>
 
 <template>
   <div class="home">
-    <ul>
-      <li v-for="book in books" :key="book.id">
-        <div class="details">
-          <h3>{{ book.title }}</h3>
-          <p>By {{ book.author }}</p>
-        </div>
-        <div class="icon">
-          <span class="material-icons">favorite</span>
-        </div>
-      </li>
-    </ul>
+    <div v-if="books === undefined">
+      <p>loading books...</p>
+    </div>
+    <div v-else-if="books?.length === 0">
+      <p>No books available.</p>
+    </div>
+    <div v-else>
+      <ul>
+        <li v-for="book in books" :key="book.id">
+          <div class="details">
+            <h3 @click="handleDelete(book)">{{ book.title }}</h3>
+            <p>By {{ book.author }}</p>
+          </div>
+          <div class="icon">
+            <span class="material-icons">favorite</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
     <CreateBookForm/>
   </div>
 </template>
