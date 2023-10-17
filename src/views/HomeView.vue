@@ -3,13 +3,14 @@
 import CreateBookForm from "@/components/CreateBookForm.vue";
 import getCollections from "@/firebase/getCollections";
 import {db} from "@/firebase/config";
-import {doc, deleteDoc} from "firebase/firestore";
+import {doc, deleteDoc, updateDoc} from "firebase/firestore";
 
 
 type Book = {
   id: string;
   title: string;
   author: string;
+  isFav: boolean
 };
 
 const {documents: books} = getCollections<Book>("books");
@@ -21,6 +22,14 @@ async function handleDelete(book: Book) {
   await deleteDoc(docRef)
 
 }
+
+function handleIsFav(book: Book){
+    const docRef = doc(db, "books", book.id);
+    updateDoc(docRef, {
+      isFav: !book.isFav
+    })
+}
+
 </script>
 
 <template>
@@ -38,8 +47,8 @@ async function handleDelete(book: Book) {
             <h3 @click="handleDelete(book)">{{ book.title }}</h3>
             <p>By {{ book.author }}</p>
           </div>
-          <div class="icon">
-            <span class="material-icons">favorite</span>
+          <div @click="handleIsFav(book)" class="icon">
+            <span :class="{'fav-book-icon': book.isFav}"  class="material-icons">favorite</span>
           </div>
         </li>
       </ul>
@@ -88,5 +97,9 @@ async function handleDelete(book: Book) {
 .icon {
   color: #bbbbbb;
   cursor: pointer;
+}
+
+.fav-book-icon {
+  color: crimson;
 }
 </style>
