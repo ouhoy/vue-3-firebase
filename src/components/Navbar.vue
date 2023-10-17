@@ -1,4 +1,21 @@
 <script setup lang="ts">
+import { onAuthStateChanged } from "firebase/auth";
+import {auth} from "@/firebase/config";
+import {ref} from "vue";
+
+import {signOut} from "firebase/auth"
+
+const currentUser = ref();
+
+onAuthStateChanged(auth, (user) => {
+  currentUser.value = user;
+});
+
+console.log(currentUser.value)
+
+function handleLogout() {
+  signOut(auth)
+}
 
 </script>
 
@@ -9,13 +26,15 @@
     <!-- for logged in users -->
     <div>
       <router-link :to="{name: 'home'}">Home</router-link>
-      <button>Logout</button>
+      <button @click="handleLogout">Logout</button>
     </div>
 
     <!-- for logged out users -->
     <div>
       <router-link :to="{name: 'login'}">Login</router-link>
       <router-link :to="{name:'signup'}">Signup</router-link>
+    </div>
+    <div>
     </div>
   </nav>
 </template>
