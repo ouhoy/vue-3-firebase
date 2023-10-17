@@ -2,12 +2,30 @@
 
 import {ref} from "vue";
 import CreateBookForm from "@/components/CreateBookForm.vue";
+import {db} from "@/firebase/config";
+import {collection, getDocs} from "firebase/firestore"
 
-const books = ref([
-  {title: 'name of the wind', author: 'patrick rothfuss', isFav: false, id: '1'},
-  {title: 'the way of kings', author: 'brandon sanderson', isfav: false, id: '2'}
-])
 
+ type Book = {
+  id: string;
+  title: string;
+  author: string;
+};
+
+const books = ref([] as Book[])
+
+const collectionRef = collection(db,"books");
+
+
+   getDocs(collectionRef)
+      .then(snapshot => {
+        let docs: Book[] = []
+        snapshot.docs.forEach(doc => {
+          const data = doc.data() as Book;
+          docs.push({...data, id: doc.id })
+        })
+        books.value = docs
+      })
 
 </script>
 
