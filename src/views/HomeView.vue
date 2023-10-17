@@ -1,31 +1,17 @@
 <script setup lang="ts">
 
-import {ref} from "vue";
 import CreateBookForm from "@/components/CreateBookForm.vue";
-import {db} from "@/firebase/config";
-import {collection, getDocs} from "firebase/firestore"
+import getCollections from "@/firebase/getCollections";
 
 
- type Book = {
+type Book = {
   id: string;
   title: string;
   author: string;
 };
 
-const books = ref([] as Book[])
+const {documents: books} = getCollections<Book>("books");
 
-const collectionRef = collection(db,"books");
-
-
-   getDocs(collectionRef)
-      .then(snapshot => {
-        let docs: Book[] = []
-        snapshot.docs.forEach(doc => {
-          const data = doc.data() as Book;
-          docs.push({...data, id: doc.id })
-        })
-        books.value = docs
-      })
 
 </script>
 
