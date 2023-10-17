@@ -1,12 +1,23 @@
 <script setup lang="ts">
 
 import {ref} from "vue";
+import useSignup from "@/composables/useSignup";
+import {useRouter} from "vue-router";
 
+const {error, isPending, signup} = useSignup()
+
+
+const router = useRouter()
 const email = ref('')
 const password = ref('')
 
 const handleSubmit = async () => {
-  console.log(email.value, password.value)
+
+  await signup(email.value, password.value)
+
+  if (!error.value) {
+    router.push("/")
+  }
 }
 
 </script>
@@ -22,9 +33,17 @@ const handleSubmit = async () => {
     <input type="password" name="password" v-model="password" required>
 
     <button>Sign up</button>
+    <div v></div>
+    <div v-if="error" class="error">
+      {{error}}</div>
   </form>
 </template>
 
-<style scoped>
+<style>
+
+.error {
+  color: crimson;
+}
 
 </style>
+

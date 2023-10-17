@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import CreateBookForm from "@/components/CreateBookForm.vue";
-import getCollections from "@/firebase/getCollections";
+import getCollections from "@/composables/getCollections";
 import {db} from "@/firebase/config";
 import {doc, deleteDoc, updateDoc} from "firebase/firestore";
 
