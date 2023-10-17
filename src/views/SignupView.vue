@@ -16,7 +16,8 @@ const handleSubmit = async () => {
   await signup(email.value, password.value)
 
   if (!error.value) {
-    router.push("/")
+    await router.push("/")
+    console.log("redirected")
   }
 }
 
@@ -33,7 +34,7 @@ const handleSubmit = async () => {
     <input type="password" name="password" v-model="password" required>
 
     <button>Sign up</button>
-    <div v></div>
+    <div v-if="isPending">Loading...</div>
     <div v-if="error" class="error">
       {{error}}</div>
   </form>
