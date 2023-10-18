@@ -1,20 +1,23 @@
 <script setup lang="ts">
-import { onAuthStateChanged } from "firebase/auth";
 import {auth} from "@/firebase/config";
-import {ref} from "vue";
 
 import {signOut} from "firebase/auth"
+import getUser from "@/composables/getUser";
+import {useRouter} from "vue-router";
+import {watch, watchEffect} from "vue";
 
-const currentUser = ref();
 
-onAuthStateChanged(auth, (user) => {
-  currentUser.value = user;
-});
+const {user} = getUser();
+const router = useRouter()
 
-console.log(currentUser.value)
 
-function handleLogout() {
-  signOut(auth)
+async function handleLogout() {
+  await signOut(auth)
+  if (!user.value) {
+    router.push('/login')
+    console.log("Ok!")
+  }
+
 }
 
 </script>
@@ -24,19 +27,20 @@ function handleLogout() {
     <h1>My Book List</h1>
 
     <!-- for logged in users -->
-    <div>
+    <div v-if="user">
       <router-link :to="{name: 'home'}">Home</router-link>
       <button @click="handleLogout">Logout</button>
     </div>
 
     <!-- for logged out users -->
-    <div>
+    <div v-if="!user">
       <router-link :to="{name: 'login'}">Login</router-link>
       <router-link :to="{name:'signup'}">Signup</router-link>
     </div>
     <div>
     </div>
   </nav>
+  <div v-if="user">{{ user.email }}</div>
 </template>
 
 <style>

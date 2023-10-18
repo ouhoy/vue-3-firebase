@@ -15,10 +15,7 @@ const handleSubmit = async () => {
 
   await signup(email.value, password.value)
 
-  if (!error.value) {
-    await router.push("/")
-    console.log("redirected")
-  }
+
 }
 
 </script>

@@ -2,6 +2,7 @@
 import {ref} from "vue";
 import {addDoc,  collection} from "firebase/firestore";
 import {db} from "@/firebase/config";
+import getUser from "@/composables/getUser";
 
 
 type Book = {
@@ -15,7 +16,7 @@ const title = ref('')
 const author = ref('')
 const collectionRef = collection(db, "books");
 
-
+const {user} = getUser()
 
 const handleSubmit = async () => {
 
@@ -23,6 +24,7 @@ const handleSubmit = async () => {
     title: title.value,
     author: author.value,
     isFav: false,
+    userId: user.value?.uid
 
   })
 
